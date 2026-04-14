@@ -16,14 +16,29 @@ hermes
 
 ## 二、配置阿里云百炼 qwen3.5-plus
 
-### 1. 配置文件位置
+### 方式 A：一键配置脚本（推荐）
+
+```bash
+cd ~/hermes-agent
+python scripts/setup-qwen-config.py
+```
+
+脚本会自动：
+1. 创建 `~/.hermes/` 目录
+2. 交互式输入 API Key
+3. 配置 `.env` 和 `config.yaml`
+4. 验证配置
+
+### 方式 B：手动配置
+
+**1. 配置文件位置**
 
 | 文件 | 路径 | 用途 |
 |------|------|------|
 | API Keys | `~/.hermes/.env` | 存储密钥等敏感信息 |
 | 配置文件 | `~/.hermes/config.yaml` | 存储模型、provider 等设置 |
 
-### 2. 配置 .env 文件
+**2. 配置 .env 文件**
 
 编辑 `~/.hermes/.env`：
 
@@ -35,24 +50,12 @@ DASHSCOPE_API_KEY=sk-xxxxxxxxxxxxxxxx
 DASHSCOPE_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
 ```
 
-### 3. 配置 config.yaml
+**3. 配置 config.yaml**
 
 编辑 `~/.hermes/config.yaml`，设置模型（第 1 行）：
 
 ```yaml
 model: alibaba/qwen3.5-plus
-```
-
-**完整的最小配置示例：**
-
-```yaml
-model: alibaba/qwen3.5-plus
-providers: {}
-fallback_providers: []
-toolsets:
-  - hermes-cli
-agent:
-  max_turns: 90
 ```
 
 ---
