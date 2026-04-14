@@ -228,32 +228,39 @@ def export_sessions_and_memory():
     print()
     print("💾 导出会话和记忆数据...")
     
+    # Hermes 使用 state.db 存储会话和记忆数据
+    state_db = HERMES_HOME / "state.db"
     sessions_db = HERMES_HOME / "sessions.db"
     memory_db = HERMES_HOME / "memory.db"
     
     exported = []
+    target_dir = BACKUP_DIR / "data"
     
-    # 导出会话数据库
+    # 导出 state.db（主要数据库）
+    if state_db.exists():
+        target_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy(state_db, target_dir / "state.db")
+        exported.append("state.db")
+        file_size = state_db.stat().st_size / 1024 / 1024  # MB
+        print(f"  ✅ 已导出：state.db ({file_size:.1f} MB)")
+    else:
+        print("  ℹ️  state.db 不存在，跳过")
+    
+    # 导出 sessions.db（如果存在）
     if sessions_db.exists():
-        target_dir = BACKUP_DIR / "data"
         target_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(sessions_db, target_dir / "sessions.db")
         exported.append("sessions.db")
-        file_size = sessions_db.stat().st_size / 1024 / 1024  # MB
+        file_size = sessions_db.stat().st_size / 1024 / 1024
         print(f"  ✅ 已导出：sessions.db ({file_size:.1f} MB)")
-    else:
-        print("  ℹ️  sessions.db 不存在，跳过")
     
-    # 导出记忆数据库
+    # 导出 memory.db（如果存在）
     if memory_db.exists():
-        target_dir = BACKUP_DIR / "data"
         target_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy(memory_db, target_dir / "memory.db")
         exported.append("memory.db")
-        file_size = memory_db.stat().st_size / 1024 / 1024  # MB
+        file_size = memory_db.stat().st_size / 1024 / 1024
         print(f"  ✅ 已导出：memory.db ({file_size:.1f} MB)")
-    else:
-        print("  ℹ️  memory.db 不存在，跳过")
     
     if exported:
         print(f"  📊 共导出 {len(exported)} 个数据库文件")
